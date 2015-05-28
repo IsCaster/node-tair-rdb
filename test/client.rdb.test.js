@@ -248,6 +248,18 @@ describe('client.test.js', function () {
           done();
         })
     })
-
-
+  
+  it("1.zrange should work",function(done){
+      var zkey="zadd.test.key2";
+      tair.zrange(zkey,nm,1,3,function(err,data){
+          console.log("data="+JSON.stringify(data))
+          should.not.exist(null)
+          data.length.should.equal(3)
+          data[0].should.equal(11111)
+          data[1].should.equal(1234)
+          data[2].should.equal(1)
+          done();
+        },datatype='int')
+    })
+ 
 });
