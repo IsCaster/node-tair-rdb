@@ -54,7 +54,7 @@ describe('client.test.js', function () {
 
   it('#get method should get empty data when key is wrong', function (done) {
     tair.get('zhemechangniyoume',2,function (err, data) {
-      should.not.exist(err);
+      err.should.equal(-3998);
       should.not.exist(data);
       done();
     });
@@ -67,7 +67,7 @@ describe('client.test.js', function () {
       tair.remove('unittestjs', function (err) {
         should.not.exist(err);
         tair.get('unittestjs', function (err, data) {
-          should.not.exist(err);
+          err.should.equal(-3998);
           should.not.exist(data);
           done();
         });
@@ -239,6 +239,14 @@ describe('client.test.js', function () {
           data[1].should.equal(1234)
           done();
         },datatype='int')
+    })
+  it("5.zrangebyscore with a none existed key, should not work",function(done){
+      var zkey="zadd.test.key.none";
+      tair.zrangebyscore(zkey,nm,1,9,function(err,data){
+          err.should.equal(-3998)
+          should.not.exist(data)
+          done();
+        })
     })
 
 
