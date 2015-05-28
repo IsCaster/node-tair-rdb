@@ -90,14 +90,14 @@ describe('client.test.js', function () {
 
   it('#incr and decr will work well', function (done) {
     var keyName = 'incrTestKey' + new Date().getTime();
-    tair.incr(keyName, 1, function (err, data) {
+    tair.incr(keyName, 1,nm ,function (err, data) {
       should.not.exist(err);
       data.should.equal(1);
 
-      tair.decr(keyName, 1, function (err, data) {
+      tair.decr(keyName, 1,nm, function (err, data) {
         should.not.exist(err);
         data.should.equal(0);
-        tair.incr(keyName, 0, function (err, data) {
+        tair.incr(keyName, 0, nm,function (err, data) {
           should.not.exist(err);
           data.should.equal(0);
           done();
@@ -142,25 +142,17 @@ describe('client.test.js', function () {
   });
 
   it("remove should work",function(done){
-      var zkey='zadd.test.key'
+      var key_list=['zadd.test.key','zadd.test.key2','sadd.int.test.key'];
       var count=0
-      tair.remove(zkey,nm,function(err){
+      for(var i=0;i<key_list.length;i++){
+        tair.remove(key_list[i],nm,function(err){
           should.not.exist(err)
-          count++
-          if(count==2)
-          {
-            done();  
+          count++;
+          if(count==key_list.length){
+             done();
           }
         })
-      zkey='zadd.test.key2'
-      tair.remove(zkey,nm,function(err){
-          should.not.exist(err)
-          count++
-          if(count==2)
-          {
-            done();  
-          }
-        })
+      }
     })
 
   it("zadd string should work",function(done){
@@ -253,7 +245,7 @@ describe('client.test.js', function () {
       var zkey="zadd.test.key2";
       tair.zrange(zkey,nm,1,3,function(err,data){
           console.log("data="+JSON.stringify(data))
-          should.not.exist(null)
+          should.not.exist(err)
           data.length.should.equal(3)
           data[0].should.equal(11111)
           data[1].should.equal(1234)
@@ -261,5 +253,34 @@ describe('client.test.js', function () {
           done();
         },datatype='int')
     })
+  it("sadd int should work",function(done){
+    var skey="sadd.int.test.key";
+    var sadd_values=[14,111,11111,1234]
+    var count=0
+    for (var i=0 ;i<sadd_values.length;++i)
+    {
+      tair.sadd(skey,nm,sadd_values[i],function(err, data){ 
+          should.not.exist(err);
+          data.should.equal(true);
+          ++count;
+          if(count==sadd_values.length)
+          {
+            done()
+          }
+        })
+    }
+
+  },0,0);
+
+  it("smembers should work",function(done){
+      var skey="sadd.int.test.key";
+      tair.smembers(skey,nm,function(err,data){
+          console.log("data="+JSON.stringify(data))
+          should.not.exist(err)
+          data.length.should.equal(4)
+          done();
+        },datatype='int')
+    })
  
+
 });
