@@ -301,6 +301,21 @@ describe('client.test.js', function () {
         })
     })
 
+  it("zcard should work",function(done){
+      var key="zadd.test.key";
+      tair.zcard(key,nm,function(err,data){
+          should.not.exist(err)
+          data.should.equal(3)
+        })
+    })
+
+  it("scard should work",function(done){
+      var key="sadd.int.test.key";
+      tair.scard(key,nm,function(err,data){
+          should.not.exist(err)
+          data.should.equal(3)
+        })
+    })
 
   it("clear up remove should work",function(done){
       var key_list=['xiang','zadd.test.key','zadd.test.key2','sadd.int.test.key','alargeData',];
