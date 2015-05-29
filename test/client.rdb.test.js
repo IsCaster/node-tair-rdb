@@ -141,20 +141,6 @@ describe('client.test.js', function () {
     }
   });
 
-  it("remove should work",function(done){
-      var key_list=['zadd.test.key','zadd.test.key2','sadd.int.test.key'];
-      var count=0
-      for(var i=0;i<key_list.length;i++){
-        tair.remove(key_list[i],nm,function(err){
-          should.not.exist(err)
-          count++;
-          if(count==key_list.length){
-             done();
-          }
-        })
-      }
-    })
-
   it("zadd string should work",function(done){
     var zkey="zadd.test.key";
     var zadd_values=['zvalue1','zvalue2','zvalue3','balabala']
@@ -281,6 +267,53 @@ describe('client.test.js', function () {
           done();
         },datatype='int')
     })
- 
+  
+  it("srem should work",function(done){
+      var skey="sadd.int.test.key";
+      tair.srem(skey,nm,14,function(err,success){
+          should.not.exist(err)
+          success.should.equal(true)
+          tair.smembers(skey,nm,function(err,data){
+              console.log("data="+JSON.stringify(data))
+              should.not.exist(err)
+              data.length.should.equal(3)
+              data.indexOf(111).should.above(-1)
+              data.indexOf(11111).should.above(-1)
+              data.indexOf(1234).should.above(-1)
+              done();
+            },datatype='int')
+        })
+    })
+  it("zrem should work",function(done){
+      var key="zadd.test.key";
+      tair.srem(key,nm,"zvalue2",function(err,success){
+          should.not.exist(err)
+          success.should.equal(true)
+          tair.smembers(skey,nm,function(err,data){
+              console.log("data="+JSON.stringify(data))
+              should.not.exist(err)
+              data.length.should.equal(3)
+              data.indexOf("zvalue1").should.above(-1)
+              data.indexOf("zvalue3").should.above(-1)
+              data.indexOf("zvalue4").should.above(-1)
+              done();
+            })
+        })
+    })
+
+
+  it("clear up remove should work",function(done){
+      var key_list=['xiang','zadd.test.key','zadd.test.key2','sadd.int.test.key','alargeData',];
+      var count=0
+      for(var i=0;i<key_list.length;i++){
+        tair.remove(key_list[i],nm,function(err){
+          should.not.exist(err)
+          count++;
+          if(count==key_list.length){
+             done();
+          }
+        })
+      }
+    })
 
 });
