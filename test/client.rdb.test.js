@@ -77,10 +77,10 @@ describe('client.test.js', function () {
 
   it('#set and #get will work well on large data', function (done) {
     var content = fs.readFileSync('./large_text.txt', 'utf-8');
-    tair.set('alargeData', content, function (err, success) {
+    tair.set('alargeData', content,0,nm,0, function (err, success) {
       should.not.exist(err);
       success.should.equal(true);
-      tair.get('alargeData', function (err, data) {
+      tair.get('alargeData',nm , function (err, data) {
         should.not.exist(err);
         data.should.equal(content);
         done();
@@ -286,16 +286,16 @@ describe('client.test.js', function () {
     })
   it("zrem should work",function(done){
       var key="zadd.test.key";
-      tair.srem(key,nm,"zvalue2",function(err,success){
+      tair.zrem(key,nm,"zvalue2",function(err,success){
           should.not.exist(err)
           success.should.equal(true)
-          tair.smembers(skey,nm,function(err,data){
+          tair.zrangebyscore(key,nm,0,1000,function(err,data){
               console.log("data="+JSON.stringify(data))
               should.not.exist(err)
               data.length.should.equal(3)
               data.indexOf("zvalue1").should.above(-1)
               data.indexOf("zvalue3").should.above(-1)
-              data.indexOf("zvalue4").should.above(-1)
+              data.indexOf("balabala").should.above(-1)
               done();
             })
         })
@@ -306,6 +306,7 @@ describe('client.test.js', function () {
       var key_list=['xiang','zadd.test.key','zadd.test.key2','sadd.int.test.key','alargeData',];
       var count=0
       for(var i=0;i<key_list.length;i++){
+        console.log('remove '+key_list[i])
         tair.remove(key_list[i],nm,function(err){
           should.not.exist(err)
           count++;
