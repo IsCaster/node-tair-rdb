@@ -306,6 +306,7 @@ describe('client.test.js', function () {
       tair.zcard(key,nm,function(err,data){
           should.not.exist(err)
           data.should.equal(3)
+          done()
         })
     })
 
@@ -314,6 +315,7 @@ describe('client.test.js', function () {
       tair.scard(key,nm,function(err,data){
           should.not.exist(err)
           data.should.equal(3)
+          done()
         })
     })
 
