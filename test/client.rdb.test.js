@@ -42,13 +42,24 @@ describe('client.test.js', function () {
   });
 
   it('#get and #set method should get buffer data when datatype is buffer', function (done) {
-    tair.set('unittestjs', new Buffer('we are testers'),0,2,0, function (err, success) {
-      tair.get('unittestjs', 2, function (err, data) {
+    tair.set('unittestjs', new Buffer('we are testers'),0,nm,0, function (err, success) {
+      tair.get('unittestjs', nm, function (err, data) {
         should.not.exist(err);
         should.exist(data);
         should.ok(Buffer.isBuffer(data));
         done();
       }, false, 'buffer');
+    });
+  });
+
+  it('#get and #set method should get float when datatype is float', function (done) {
+    tair.set('unittestjs', 3.14159,0,nm,0, function (err, success) {
+      tair.get('unittestjs', nm, function (err, data) {
+        should.not.exist(err);
+        should.exist(data);
+        data.should.equal(3.14159);
+        done();
+      }, false, 'float');
     });
   });
 
