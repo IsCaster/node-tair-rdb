@@ -1,12 +1,10 @@
-# Node Tair rdb
+# Node Tair Rdb
 
-Taobao [tair-rdb](http://code.taobao.org/p/tair/src/tags/tair_rdb_A_2_3_5_5_58_20130415/) Client for Node.js, build on pure javascript without any native code.
+Taobao [tair-rdb](http://code.taobao.org/p/tair/src/tags/tair_rdb_A_2_3_5_5_58_20130415/) Client for Node.js, build on pure javascript without any native code. Tair-rdb is a subproject of [tair](http://code.taobao.org/p/tair/src/), using redis storage engine, support all data type of redis.
 
-Taobao Tair-rdb is a subproject of Taobao [tair](http://code.taobao.org/p/tair/src/), using redis storage engine, support all data type of redis.
+node-tair-rdb has two parts of APIs. One called node-tair-rdb client, the other called node-tair-rdb model.
 
-Tair-rdb has two parts of APIs. One called tair-rdb client, the other called tair-rdb model.
-
-Tair-rdb client APIs was writed based on [node tair](https://github.com/wangbinke/node-tair),  expanded with redis commands
+node-tair-rdb client APIs was writed based on [node tair](https://github.com/wangbinke/node-tair),  expanded with redis commands
 
 ## Installation
 
@@ -76,14 +74,14 @@ var tair = new cli('group_name', configServer, function (err){
 	 * @params namespace: the area(namespace) of data, number 0~1023, optional, default is 0
 	 * @params initValue: if key is not exist, give it a value
 	 * @params expire: if key is not exist, the new value`s expire(seconds)
-	 * @params callback(err, data): data is the count number after incr or decr.
+	 * @params callback(err, data): data is the count number after incr or decr
 
     Tair.smembers (key, namespace, callback, datatype)
      * get all members of a set 
      * @params key：must be string
      * @params namespace: the area(namespace) of data, number 0~1023, optional, default is 0
      * @params callback(err, data):
-     * @params datatype: 'string' or 'buffer', returned data type, default is string. 
+     * @params datatype: 'string' or 'buffer', returned data type, default is string
 
     Tair.zrangebyscore (key, namespace, start, end, callback, datatype, limit, with_score )
      * Returns all the elements in the sorted set at `key` with a score between `start` and `end` (including elements with score equal to `start` or `end`). The elements are considered to be ordered from low to high scores.
