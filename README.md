@@ -73,7 +73,7 @@ var tair = new cli('group_name', configServer, function (err){
 	 * @params count: amount to plus or minus, usually be positive number
 	 * @params namespace: the area(namespace) of data, number 0~1023, optional, default is 0
 	 * @params initValue: if key is not exist, give it a value
-	 * @params expire: if key is not exist, the new value\'s expire(seconds)
+	 * @params expire: if key is not exist,set the expire(seconds) of new value 
 	 * @params callback(err, data): data is the count number after incr or decr
 
     Tair.smembers (key, namespace, callback, datatype)
@@ -225,8 +225,8 @@ If it's not a multi-table, then ad_space is the table class
 ````
 if the table name or attribute name is a invalid identifier ,the illegal chars would be replaced by "_",
 for example:
- ad.group.set => ad_group_set
- ad.space => ad_space
+- ad.group.set => ad_group_set
+- ad.space => ad_space
 ````js
     console.log("new_ad_space_entry is "+JSON.stringify(new_ad_space_entry))
     //new_ad_space_entry will get a property 'id' when insert it into database, assume the id is 1024
@@ -240,8 +240,8 @@ Get array of objects of class ad_space_tbl , which type is 1 and desc contains a
 ````js
     ad_space_tbl.objects.filter({"desc__contains":"app","type":1}).then(function(the_ad_space_entries){})
 ````
-````js    
 get all data of table ad_space_tbl with mall_id=447
+````js    
     ad_space_tbl.objects.all().then(function(all_data_of_ad_space){ } )
 ````
 change data of the first entry in the_ad_space_entries
