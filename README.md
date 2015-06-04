@@ -73,7 +73,7 @@ var tair = new cli('group_name', configServer, function (err){
 	 * @params count: amount to plus or minus, usually be positive number
 	 * @params namespace: the area(namespace) of data, number 0~1023, optional, default is 0
 	 * @params initValue: if key is not exist, give it a value
-	 * @params expire: if key is not exist, the new value's expire(seconds)
+	 * @params expire: if key is not exist, the new value\'s expire(seconds)
 	 * @params callback(err, data): data is the count number after incr or decr
 
     Tair.smembers (key, namespace, callback, datatype)
@@ -155,11 +155,12 @@ var tair = new cli('group_name', configServer, function (err){
 ````
 
 ## An Example of tair-rdb model
-First, we need a json data to define what database table you want to create.
 ````js
-    var mall_id=0
+    //First, we need a json data to define what database table you want to create.
+    //if it's a single table ,set `multi-table` to false ,else set it to true, default is false
     var ad_space_model_conf={
-        "name":"ad.space"+mall_id,
+        "name":"ad.space",
+        "multi-table":true;
         "attr":[
             {
                 "key":"desc",
@@ -174,7 +175,7 @@ First, we need a json data to define what database table you want to create.
             {
                 "key":"ad.group.set",
                 "type":"zset",
-                "default":[],    
+                "default":{},    
             },
             {
                 "key":"width",
@@ -187,12 +188,10 @@ First, we need a json data to define what database table you want to create.
                 "default":30,    
             },
         ]}
-````
-Then, we need create db connection.
-````js
+    //Then, we need create db connection.
     var db = require("tair-rdb").db
     var conn = new db('group_1',[
-        {host: '192.168.2.201', port: 5198}
+            {host: '192.168.2.201', port: 5198}
         ],
         {heartBeatInterval: 3000},
         function(err)
@@ -202,8 +201,63 @@ Then, we need create db connection.
             }
         }
     )
-
+    //create table ad.space class .
+    var model=require("tair-rdb").model
+    model.load(this,ad_space_model_conf,db)
+    //Now you can use class ad_space, to generate table class
+    var mall_id=447
+    var ad_space_tbl=new ad_space(mall_id)
+    var new_ad_space_entry=new ad_space_tbl()
+    new_ad_space_entry.desc='app portal page'
+    new_ad_space_entry.ad_group_set["123456"]=123456
+    new_ad_space_entry.ad_group_set["123457"]=123457
+    //using the default value of other field, save the entry to database
+    new_ad_space_entry.save().then()
+    //then function accept a function parameter to run after save()
 ````
+If it's not a multi-table, then ad_space is the table class
+````js    
+    var new_ad_space_entry=new ad_space()    
+    new_ad_space_entry.desc='app banner ad'
+    new_ad_space_entry.ad_group_set["123458"]=123458
+    new_ad_space_entry.ad_group_set["123459"]=123459
+    new_ad_space_entry.save()
+````
+if the table name or attribute name is a invalid identifier ,the illegal chars would be replaced by "_",
+for example:
+ ad.group.set => ad_group_set
+ ad.space => ad_space
+````js
+    console.log("new_ad_space_entry is "+JSON.stringify(new_ad_space_entry))
+    //new_ad_space_entry will get a property 'id' when insert it into database, assume the id is 1024
+
+    //Query the table
+    //get the entry we just insert into
+    ad_space_tbl.objects.get(1024).then(function(the_ad_space_entry){...})
+    //the_ad_space_entry is a object of class ad_space_tbl
+````
+Get array of objects of class ad_space_tbl , which type is 1 and desc contains app
+````js
+    ad_space_tbl.objects.filter({"desc__contains":"app","type":1}).then(function(the_ad_space_entries){})
+````
+````js    
+get all data of table ad_space_tbl with mall_id=447
+    ad_space_tbl.objects.all().then(function(all_data_of_ad_space){ } )
+````
+change data of the first entry in the_ad_space_entries
+````js
+    the_ad_space_entries[0].desc="app the other banner ad"
+    the_ad_space_entries[0].width=60
+    the_ad_space_entries[0].height=80
+    the_ad_space_entries[0].save()
+````
+delete the second entry in the the_ad_space_entries
+````js
+    the_ad_space_entries[1].remove().then()
+````
+remove action is executed by record id ,if the record is not saved then the remove action would fail.
+all the database operation is run asynchronous, so mostly you need put you code after database
+operations into then function 
 
 ### Infomation and Caution
 
