@@ -8,9 +8,15 @@ var trans = require('../lib/transcoder');
 var should = require('should');
 
 describe('transcoder.test.js', function () {
+  it('should encode and decode number 0 right', function () {
+    var bool =0;
+    var enc = trans.encode(bool,'utf-8',true) ;
+    enc.should.length(6);
+    var dec = trans.decode(enc);
+  });
   it('should encode and decode number right', function () {
-    var bool = 12345678;
-    var enc = trans.encode(bool, 'utf-8', true);
+    var bool =123456;
+    var enc = trans.encode(bool,'utf-8',true) ;
     enc.should.length(6);
     var dec = trans.decode(enc);
   });
@@ -28,6 +34,12 @@ describe('transcoder.test.js', function () {
   });
   it('should encode and decode string right', function () {
     var bool = 'i am a string';
+    var enc = trans.encode(bool, 'utf-8', true);
+    enc.should.length(2 + bool.length);
+    var dec = trans.decode(enc);
+  });
+  it('should encode and decode empty string right', function () {
+    var bool = '';
     var enc = trans.encode(bool, 'utf-8', true);
     enc.should.length(2 + bool.length);
     var dec = trans.decode(enc);

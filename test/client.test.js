@@ -13,9 +13,8 @@ var tair;
 describe('client.test.js', function () {
 
   before(function (done) {
-    tair = new cli('group_market2', [
-      {host: '127.0.0.1', port: 62345},
-      {host: '10.235.144.195', port: 5198}
+    tair = new cli('group_1', [
+      {host: '192.168.2.201', port: 5198}
     ], {heartBeatInterval: 3000},
       function (err) {
         if (err) {
