@@ -73,7 +73,7 @@ var tair = new cli('group_name', configServer, function (err){
 	 * @params count: amount to plus or minus, usually be positive number
 	 * @params namespace: the area(namespace) of data, number 0~1023, optional, default is 0
 	 * @params initValue: if key is not exist, give it a value
-	 * @params expire: if key is not exist, the new value`s expire(seconds)
+	 * @params expire: if key is not exist, the new value's expire(seconds)
 	 * @params callback(err, data): data is the count number after incr or decr
 
     Tair.smembers (key, namespace, callback, datatype)
@@ -152,6 +152,57 @@ var tair = new cli('group_name', configServer, function (err){
      * @params key：must be string
      * @params namespace: the area(namespace) of data, number 0~1023, optional, default is 0
      * @params callback(err, data):
+````
+
+## An Example of tair-rdb model
+First, we need a json data to define what database table you want to create.
+````js
+    var mall_id=0
+    var ad_space_model_conf={
+        "name":"ad.space"+mall_id,
+        "attr":[
+            {
+                "key":"desc",
+                "type":"string",
+                "default":"",    
+            },
+            {
+                "key":"type",
+                "type":"int",
+                "default":1,    
+            },
+            {
+                "key":"ad.group.set",
+                "type":"zset",
+                "default":[],    
+            },
+            {
+                "key":"width",
+                "type":"int",
+                "default":40,    
+            },
+            {
+                "key":"height",
+                "type":"int",
+                "default":30,    
+            },
+        ]}
+````
+Then, we need create db connection.
+````js
+    var db = require("tair-rdb").db
+    var conn = new db('group_1',[
+        {host: '192.168.2.201', port: 5198}
+        ],
+        {heartBeatInterval: 3000},
+        function(err)
+        {
+            if (err) {
+                console.log("database connection error:"+err)
+            }
+        }
+    )
+
 ````
 
 ### Infomation and Caution
