@@ -14,7 +14,7 @@ describe('client.test.js', function () {
 
   before(function (done) {
     tair = new cli('group_1', [
-      {host: '192.168.2.201', port: 5198}
+      {host: 'localhost', port: 5198}
     ], {heartBeatInterval: 3000},
       function (err) {
         if (err) {
@@ -200,7 +200,6 @@ describe('client.test.js', function () {
           done();
         })
     })
-
   it("zadd int should work",function(done){
     var zkey="zadd.test.key2";
     var zadd_values=[1,111,11111,1234,0]
@@ -220,6 +219,33 @@ describe('client.test.js', function () {
     }
 
   },0,0);
+
+  it("zadd string of int should work",function(done){
+    var zkey="zadd.test.key3";
+    var zadd_values=["9223372036854775808","-9223372036854775807","9223372036854775807","45678"]
+    var zadd_scores=[1,2,4,5]
+    var count=0
+    for (var i=0 ;i<zadd_values.length;++i)
+    {
+      tair.zadd(zkey,nm,zadd_values[i],zadd_scores[i],function(err, data){ 
+          should.not.exist(err);
+          data.should.equal(true);
+          ++count;
+          if(count==zadd_values.length)
+          {
+            tair.zrangebyscore(zkey,nm,1,5,function(err,data){
+              should.not.exist(err)
+              data.length.should.equal(4)
+              data.indexOf(zadd_values[0]).should.not.equal(-1)
+              done()
+            })
+          }
+        })
+    }
+
+  },0,0);
+
+
   it("3.zrangebyscore should work",function(done){
       var zkey="zadd.test.key2";
       tair.zrangebyscore(zkey,nm,1,9,function(err,data){
@@ -396,8 +422,8 @@ describe('client.test.js', function () {
     })
 
   it("clear up remove should work",function(done){
-      var key_list=['xiang','zadd.test.key','zadd.test.key2','sadd.int.test.key','alargeData',
-        "sadd.string.test.key"];
+      var key_list=['xiang','zadd.test.key','zadd.test.key2','zadd.test.key3','sadd.int.test.key','alargeData',
+        "sadd.string.test.key" ];
       var count=0
       for(var i=0;i<key_list.length;i++){
         console.log('remove '+key_list[i])
