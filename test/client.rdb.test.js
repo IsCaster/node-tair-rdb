@@ -246,6 +246,17 @@ describe('client.test.js', function () {
   },0,0);
 
 
+  it("zadd string of int then zrange should work",function(done){
+    var zkey="zadd.test.key3";
+    var zadd_values=["9223372036854775808","-9223372036854775807","9223372036854775807","45678"]
+    tair.zrange(zkey,nm,0,4,function(err,data){
+        should.not.exist(err)
+        data.length.should.equal(4)
+        data.indexOf(zadd_values[0]).should.not.equal(-1)
+        done()
+      })
+
+  })
   it("3.zrangebyscore should work",function(done){
       var zkey="zadd.test.key2";
       tair.zrangebyscore(zkey,nm,1,9,function(err,data){
@@ -421,9 +432,29 @@ describe('client.test.js', function () {
         })
     })
 
+  it("hset should work",function(done){
+      var key="hset.test.key";
+      var fields=['field1','field2','field3','balabala',"","field1"]
+      var values=['','value2','value3','balabala', "value5","new+one"]
+      var count=0
+      for (var i=0 ;i<fields.length;++i)
+      {
+        tair.hset(key,nm,fields[i],values[i],function(err, data){ 
+            should.not.exist(err);
+            data.should.equal(true);
+            ++count;
+            if(count==values.length)
+            {
+              done()
+            }
+          })
+      }
+    })
+
+
   it("clear up remove should work",function(done){
       var key_list=['xiang','zadd.test.key','zadd.test.key2','zadd.test.key3','sadd.int.test.key','alargeData',
-        "sadd.string.test.key" ];
+        "sadd.string.test.key","hset.test.key" ];
       var count=0
       for(var i=0;i<key_list.length;i++){
         console.log('remove '+key_list[i])
