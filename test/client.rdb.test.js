@@ -9,7 +9,7 @@ var should = require('should');
 var fs = require('fs');
 
 var tair;
-var nm=2;
+var nm=3;
 describe('client.test.js', function () {
 
   before(function (done) {
@@ -26,7 +26,7 @@ describe('client.test.js', function () {
   });
 
   it('#set method should set a data', function (done) {
-    tair.set('xiang', 'we are testers',0,2,0,function (err, success) {
+    tair.set('xiang', 'we are testers',0,nm,0,function (err, success) {
       should.not.exist(err);
       success.should.equal(true);
       done();
@@ -34,14 +34,14 @@ describe('client.test.js', function () {
   });
 
   it('#get method should get right data', function (done) {
-    tair.get('xiang',2, function (err, data) {
+    tair.get('xiang',nm, function (err, data) {
       should.not.exist(err);
       data.should.equal('we are testers');
       done();
     });
   });
   it('#set method should set empty string right', function (done) {
-    tair.set('xiang', '',0,2,0,function (err, success) {
+    tair.set('xiang', '',0,nm,0,function (err, success) {
       should.not.exist(err);
       success.should.equal(true);
       done();
@@ -49,7 +49,7 @@ describe('client.test.js', function () {
   });
 
   it('#get method should get empty string right', function (done) {
-    tair.get('xiang',2, function (err, data) {
+    tair.get('xiang',nm, function (err, data) {
       should.not.exist(err);
       data.should.equal('');
       done();
@@ -57,7 +57,7 @@ describe('client.test.js', function () {
   });
 
   it('#set method should set int 0 right', function (done) {
-    tair.set('xiang', 0,0,2,0,function (err, success) {
+    tair.set('xiang', 0,0,nm,0,function (err, success) {
       should.not.exist(err);
       success.should.equal(true);
       done();
@@ -65,7 +65,7 @@ describe('client.test.js', function () {
   });
 
   it('#get method should get int 0 right', function (done) {
-    tair.get('xiang',2, function (err, data) {
+    tair.get('xiang',nm, function (err, data) {
       should.not.exist(err);
       data.should.equal(0);
       done();
@@ -96,7 +96,7 @@ describe('client.test.js', function () {
   });
 
   it('#get method should get empty data when key is wrong', function (done) {
-    tair.get('zhemechangniyoume',2,function (err, data) {
+    tair.get('zhemechangniyoume',nm,function (err, data) {
       err.should.equal(-3998);
       should.not.exist(data);
       done();
@@ -460,8 +460,11 @@ describe('client.test.js', function () {
       tair.hgetall(key,nm,function(err,data){
         should.not.exist(err)
         data.length.should.equal(5)
-        for(obj in data)
+        console.log("hgetall data="+JSON.stringify(data))
+        for(i in data)
         {
+          var obj=data[i]
+          console.log("hgetall field="+obj.field+" value="+obj.value)
           fields.indexOf(obj.field).should.above(-1)
           if(obj.field==='field1')
           {
@@ -477,18 +480,19 @@ describe('client.test.js', function () {
     })
 
   it("clear up remove should work",function(done){
-      var key_list=['xiang','zadd.test.key','zadd.test.key2','zadd.test.key3','sadd.int.test.key','alargeData',
+      var key_list=['xiang','unittestjs','zadd.test.key','zadd.test.key2','zadd.test.key3','sadd.int.test.key','alargeData',
         "sadd.string.test.key","hset.test.key" ];
       var count=0
       for(var i=0;i<key_list.length;i++){
         console.log('remove '+key_list[i])
-        tair.remove(key_list[i],nm,function(err){
+        tair.remove(key_list[i],nm,(function(index){ return function(err){
+          console.log("key="+key_list[index]+",err="+err)
           should.not.exist(err)
           count++;
           if(count==key_list.length){
              done();
           }
-        })
+        }})(i))
       }
     })
 
