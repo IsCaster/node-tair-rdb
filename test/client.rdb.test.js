@@ -451,6 +451,30 @@ describe('client.test.js', function () {
       }
     })
 
+  it("hgetall should work",function(done){
+      var key="hset.test.key";
+      var fields=['field1','field2','field3','balabala',"","field1"]
+      var values=['','value2','value3','balabala', "value5","new+one"]
+      var count=0
+
+      tair.hgetall(key,nm,function(err,data){
+        should.not.exist(err)
+        data.length.should.equal(5)
+        for(obj in data)
+        {
+          fields.indexOf(obj.field).should.above(-1)
+          if(obj.field==='field1')
+          {
+            obj.value.should.equal("new+one")
+          }
+          else
+          {
+            obj.value.should.equal(values[fields.indexOf(obj.field)])
+          }
+        }
+        done()
+      })
+    })
 
   it("clear up remove should work",function(done){
       var key_list=['xiang','zadd.test.key','zadd.test.key2','zadd.test.key3','sadd.int.test.key','alargeData',
