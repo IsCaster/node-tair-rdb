@@ -14,7 +14,7 @@ describe('client.test.js', function () {
 
   before(function (done) {
     tair = new cli('group_1', [
-      {host: '192.168.2.201', port: 5198}
+      {host: 'localhost', port: 5198}
     ], {heartBeatInterval: 3000},
       function (err) {
         if (err) {
@@ -121,14 +121,15 @@ describe('client.test.js', function () {
     var testCases = {caonima: 'yamiedie', juhuacan: 'fuckyou', loli: 'dashu', meizi: 'shuaiguo'};
     var testKeys = ['caonima', 'juhuacan', 'loli', 'meizi'];
     var setCount = 4;
+    var nm=3
     for (var k in testCases) {
       var v = testCases[k];
-      tair.set(k, v, function (err, succ) {
+      tair.set(k, v,0,nm,0, function (err, succ) {
         should.not.exist(err);
         succ.should.be.equal(true);
         setCount--;
         if (setCount === 0) {
-          tair.mget(testKeys, function (err, data) {
+          tair.mget(testKeys,nm, function (err, data) {
             should.not.exist(err);
             data.should.have.property('caonima');
             data.length.should.equal(3);

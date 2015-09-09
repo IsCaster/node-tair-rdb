@@ -521,13 +521,14 @@ describe('client.test.js', function () {
     save_used_key(testKeys)
     for (var k in testCases) {
       var v = testCases[k];
-      tair.set(k, v, function (err, succ) {
+      tair.set(k, v,0,nm,0, function (err, succ) {
         should.not.exist(err);
         succ.should.be.equal(true);
         setCount--;
         if (setCount === 0) {
-          tair.mget(testKeys, function (err, data) {
+          tair.mget(testKeys,nm, function (err, data) {
             should.not.exist(err);
+            console.log("mget return data="+JSON.stringify(data))
             data.should.have.property('caonima');
             data.length.should.equal(4);
             data.juhuacan.should.equal('fuckyou');
@@ -545,12 +546,12 @@ describe('client.test.js', function () {
     save_used_key(testKeys)
     for (var k in testCases) {
       var v = testCases[k];
-      tair.set(k, v, function (err, succ) {
+      tair.set(k, v,0,nm,0, function (err, succ) {
         should.not.exist(err);
         succ.should.be.equal(true);
         setCount--;
         if (setCount === 0) {
-          tair.mget(testKeys, function (err, data) {
+          tair.mget(testKeys,nm, function (err, data) {
             should.not.exist(err);
             data.should.have.property('caonima');
             data.length.should.equal(4);
@@ -572,7 +573,7 @@ describe('client.test.js', function () {
           console.log("key="+key+",err="+err)
           should.not.exist(err)
           count++;
-          if(count==key_list.length){
+          if(count==Object.keys(used_key).length){
              done();
           }
         }})(key))
