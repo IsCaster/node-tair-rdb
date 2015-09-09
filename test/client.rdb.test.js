@@ -10,6 +10,22 @@ var fs = require('fs');
 
 var tair;
 var nm=3;
+var used_key={}
+
+function save_used_key(keys)
+{
+    if(keys.constructor === Array)
+    {   
+      keys.forEach(function(e){
+          used_key[e]=1
+        })  
+    }   
+    else
+    {   
+      used_key[keys]=1
+    }   
+}
+
 describe('client.test.js', function () {
 
   before(function (done) {
@@ -26,11 +42,13 @@ describe('client.test.js', function () {
   });
 
   it('#set method should set a data', function (done) {
-    tair.set('xiang', 'we are testers',0,nm,0,function (err, success) {
+    var key='xiang'
+    tair.set(key, 'we are testers',0,nm,0,function (err, success) {
       should.not.exist(err);
       success.should.equal(true);
       done();
     });
+    save_used_key(key)
   });
 
   it('#get method should get right data', function (done) {
@@ -82,6 +100,7 @@ describe('client.test.js', function () {
         done();
       }, false, 'buffer');
     });
+    save_used_key('unittestjs')
   });
 
   it('#get and #set method should get float when datatype is float', function (done) {
@@ -104,12 +123,12 @@ describe('client.test.js', function () {
   });
 
   it('#remove method should remove data right', function (done) {
-    tair.set('unittestjs', 'we are testers', function (err, success) {
+    tair.set('unittestjs.remove', 'we are testers', function (err, success) {
       should.not.exist(err);
       success.should.equal(true);
-      tair.remove('unittestjs', function (err) {
+      tair.remove('unittestjs.remove', function (err) {
         should.not.exist(err);
-        tair.get('unittestjs', function (err, data) {
+        tair.get('unittestjs.remove', function (err, data) {
           err.should.equal(-3998);
           should.not.exist(data);
           done();
@@ -129,6 +148,7 @@ describe('client.test.js', function () {
         done();
       });
     });
+    save_used_key('alargeData')
   });
 
   it('#incr and decr will work well', function (done) {
@@ -147,6 +167,7 @@ describe('client.test.js', function () {
         });
       });
     });
+    save_used_key(keyName)
   });
 
   it('heartbeat should work', function (done) {
@@ -177,8 +198,8 @@ describe('client.test.js', function () {
           }
         })
     }
-
-  },0,0);
+    save_used_key(zkey)
+  });
 
   it("1.zrangebyscore should work",function(done){
       var zkey="zadd.test.key";
@@ -188,6 +209,7 @@ describe('client.test.js', function () {
           data[4].should.equal("")
           done();
         })
+      save_used_key(zkey)
     })
 
   it("2.zrangebyscore should work",function(done){
@@ -199,6 +221,7 @@ describe('client.test.js', function () {
           data[1].should.equal('balabala')
           done();
         })
+      save_used_key(zkey)
     })
   it("zadd int should work",function(done){
     var zkey="zadd.test.key2";
@@ -217,8 +240,8 @@ describe('client.test.js', function () {
           }
         })
     }
-
-  },0,0);
+    save_used_key(zkey)
+  });
 
   it("zadd string of int should work",function(done){
     var zkey="zadd.test.key3";
@@ -242,8 +265,8 @@ describe('client.test.js', function () {
           }
         })
     }
-
-  },0,0);
+    save_used_key(zkey)
+  });
 
 
   it("zadd string of int then zrange should work",function(done){
@@ -255,7 +278,7 @@ describe('client.test.js', function () {
         data.indexOf(zadd_values[0]).should.not.equal(-1)
         done()
       })
-
+    save_used_key(zkey)
   })
   it("3.zrangebyscore should work",function(done){
       var zkey="zadd.test.key2";
@@ -265,6 +288,7 @@ describe('client.test.js', function () {
           data[4].should.equal(0);
           done();
         },datatype='int')
+      save_used_key(zkey)
     })
   it("4.zrangebyscore should work",function(done){
       var zkey="zadd.test.key2";
@@ -275,6 +299,7 @@ describe('client.test.js', function () {
           data[1].should.equal(1234)
           done();
         },datatype='int')
+      save_used_key(zkey)
     })
   it("5.zrangebyscore with a none existed key, should not work",function(done){
       var zkey="zadd.test.key.none";
@@ -296,6 +321,7 @@ describe('client.test.js', function () {
           data[2].should.equal(1)
           done();
         },datatype='int')
+      save_used_key(zkey)
     })
   it("sadd int should work",function(done){
     var skey="sadd.int.test.key";
@@ -313,8 +339,8 @@ describe('client.test.js', function () {
           }
         })
     }
-
-  },0,0);
+    save_used_key(skey)
+  });
 
   it("smembers should work",function(done){
       var skey="sadd.int.test.key";
@@ -328,6 +354,7 @@ describe('client.test.js', function () {
           data.indexOf(0).should.above(-1)
           done();
         },datatype='int')
+      save_used_key(skey)
     })
   it("sadd string should work",function(done){
     var skey="sadd.string.test.key";
@@ -345,8 +372,8 @@ describe('client.test.js', function () {
           }
         })
     }
-
-  },0,0);
+    save_used_key(skey)
+  });
 
   it("smembers of strings should work",function(done){
       var skey="sadd.string.test.key";
@@ -360,6 +387,7 @@ describe('client.test.js', function () {
           data.indexOf("!$@$^").should.above(-1)
           done();
         },datatype='string')
+      save_used_key(skey)
     })
  
   it("srem should work",function(done){
@@ -378,6 +406,7 @@ describe('client.test.js', function () {
               done();
             },datatype='int')
         })
+      save_used_key(skey)
     })
   it("zrem should work",function(done){
       var key="zadd.test.key";
@@ -395,6 +424,7 @@ describe('client.test.js', function () {
               done();
             })
         })
+      save_used_key(key)
     })
 
   it("zcard should work",function(done){
@@ -404,6 +434,7 @@ describe('client.test.js', function () {
           data.should.equal(4)
           done()
         })
+      save_used_key(key)
     })
   it("zrem empty string should work",function(done){
       var key="zadd.test.key";
@@ -420,6 +451,7 @@ describe('client.test.js', function () {
               done();
             })
         })
+      save_used_key(key)
     })
 
 
@@ -430,6 +462,7 @@ describe('client.test.js', function () {
           data.should.equal(4)
           done()
         })
+      save_used_key(key)
     })
 
   it("hset should work",function(done){
@@ -437,6 +470,7 @@ describe('client.test.js', function () {
       var fields=['field1','field2','field3','balabala',"","field1"]
       var values=['','value2','value3','balabala', "value5","new+one"]
       var count=0
+      save_used_key(key)
       for (var i=0 ;i<fields.length;++i)
       {
         tair.hset(key,nm,fields[i],values[i],function(err, data){ 
@@ -457,6 +491,7 @@ describe('client.test.js', function () {
       var values=['','value2','value3','balabala', "value5","new+one"]
       var count=0
 
+      save_used_key(key)
       tair.hgetall(key,nm,function(err,data){
         should.not.exist(err)
         data.length.should.equal(5)
@@ -479,21 +514,68 @@ describe('client.test.js', function () {
       })
     })
 
+  it('#mget string will work well', function (done) {
+    var testCases = {caonima: 'yamiedie', juhuacan: 'fuckyou', loli: 'dashu', meizi: 'shuaiguo'};
+    var testKeys = ['caonima', 'juhuacan', 'loli', 'meizi'];
+    var setCount = 4;
+    save_used_key(testKeys)
+    for (var k in testCases) {
+      var v = testCases[k];
+      tair.set(k, v, function (err, succ) {
+        should.not.exist(err);
+        succ.should.be.equal(true);
+        setCount--;
+        if (setCount === 0) {
+          tair.mget(testKeys, function (err, data) {
+            should.not.exist(err);
+            data.should.have.property('caonima');
+            data.length.should.equal(4);
+            data.juhuacan.should.equal('fuckyou');
+            done();
+          });
+        }
+      });
+    }
+  });
+
+  it('#mget int will work well', function (done) {
+    var testCases = {caonima: 123, juhuacan: 456, loli: 789, meizi: 0};
+    var testKeys = ['caonima', 'juhuacan', 'loli', 'meizi'];
+    var setCount = 4;
+    save_used_key(testKeys)
+    for (var k in testCases) {
+      var v = testCases[k];
+      tair.set(k, v, function (err, succ) {
+        should.not.exist(err);
+        succ.should.be.equal(true);
+        setCount--;
+        if (setCount === 0) {
+          tair.mget(testKeys, function (err, data) {
+            should.not.exist(err);
+            data.should.have.property('caonima');
+            data.length.should.equal(4);
+            data.juhuacan.should.equal(456);
+            done();
+          },'int');
+        }
+      });
+    }
+  });
+
   it("clear up remove should work",function(done){
-      var key_list=['xiang','unittestjs','zadd.test.key','zadd.test.key2','zadd.test.key3','sadd.int.test.key','alargeData',
-        "sadd.string.test.key","hset.test.key" ];
+      /*var key_list=['xiang','unittestjs','zadd.test.key','zadd.test.key2','zadd.test.key3','sadd.int.test.key','alargeData',
+        "sadd.string.test.key","hset.test.key" ];*/
       var count=0
-      for(var i=0;i<key_list.length;i++){
-        console.log('remove '+key_list[i])
-        tair.remove(key_list[i],nm,(function(index){ return function(err){
-          console.log("key="+key_list[index]+",err="+err)
+      for(var key in used_key){
+        console.log('remove '+key)
+        tair.remove(key,nm,(function(key){ return function(err){
+          console.log("key="+key+",err="+err)
           should.not.exist(err)
           count++;
           if(count==key_list.length){
              done();
           }
-        }})(i))
+        }})(key))
       }
     })
-
 });
