@@ -30,7 +30,7 @@ describe('client.test.js', function () {
 
   before(function (done) {
     tair = new cli('group_1', [
-      {host: 'localhost', port: 5198}
+      {host: 'WUSHUU-TAIR-CS', port: 5198}
     ], {heartBeatInterval: 3000},
       function (err) {
         if (err) {
