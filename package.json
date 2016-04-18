@@ -2,12 +2,19 @@
   "name": "node-tair-rdb",
   "description": "Taobao Tair-rdb Client for Node.js",
   "version": "0.0.27",
-  "keywords": [ "taobao", "tair", "key value", "client" ],
+  "keywords": [
+    "taobao",
+    "tair",
+    "key value",
+    "client"
+  ],
   "author": "sunfang1cn <kate.sf@taobao.com>",
   "scripts": {
     "test": "make test"
   },
   "dependencies": {
+    "bluebird": "^3.3.5",
+    "co": "^4.6.0",
     "cutter": "0.0.3"
   },
   "devDependencies": {
@@ -21,8 +28,8 @@
     "node": ">= 0.6.0"
   },
   "homepage": "https://github.com/sunfang1cn/node-tair",
-  "repository": { 
-    "type": "git", 
-    "url": "https://github.com/sunfang1cn/node-tair.git" 
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sunfang1cn/node-tair.git"
   }
 }
